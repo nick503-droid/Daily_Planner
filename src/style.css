@@ -1,0 +1,14 @@
+@import "tailwindcss";
+
+/* Base theme variables will go here later */
+
+/* En tu style.css */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-color: #050505; /* Un negro mucho más profundo que el slate-900 */
+    --card-bg: #0d0d0d;
+    --text-primary: #f8fafc;
+  }
+}
+
+@custom-variant dark (&:is(.dark *));
