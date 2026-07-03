@@ -5,6 +5,10 @@ export interface Habit {
   icon: string;  // Nombre del icono de Lucide
   createdAt: string; // YYYY-MM-DD
   
+  // NUEVO: Agregados para el soporte de bloques de tiempo dinámicos
+  startTime?: string; // HH:mm
+  endTime?: string;   // HH:mm
+
   // Metadatos de Gamificación (Precalculados para rendimiento)
   currentStreak: number;
   bestStreak: number;
@@ -29,4 +33,7 @@ export interface PlannerItem {
   notes?: string;
   isCompleted: boolean;
   habitId?: number; // Si este ítem es parte de un hábito, llevará su ID aquí
+  
+  // NUEVO: Permitir adjuntar el color del hábito directamente en el planificador
+  color?: string;   
 }
