@@ -1,10 +1,13 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import { db } from '../../shared/database/db'
+import { scheduleHabitNotifications, cancelHabitNotifications } from '../../shared/notifications/habitNotifications'
 
 const route = useRoute()
 const router = useRouter()
+const { t } = useI18n()
 const habitId = Number(route.params.id)
 
 // Estado del formulario
@@ -37,11 +40,22 @@ const updateHabit = async () => {
     startTime: startTime.value,
     endTime: endTime.value
   })
+
+  // Si este hábito ya tenía tareas materializadas en el planner, reprogramamos sus
+  // notificaciones con el nombre/horario nuevo (simplificación: reabre una ventana de
+  // 30 días desde hoy, no intenta alinearse con las fechas exactas ya creadas).
+  await cancelHabitNotifications(habitId)
+  const wasScheduled = await db.plannerItems.where({ habitId }).count()
+  if (wasScheduled > 0) {
+    await scheduleHabitNotifications(habitId, t('notifications.habitSoon', { name: name.value }), startTime.value)
+  }
+
   router.push('/habits')
 }
 
 const deleteHabit = async () => {
-  if (confirm('¿Eliminar este hábito permanentemente?')) {
+  if (confirm(t('editHabit.confirmDelete'))) {
+    await cancelHabitNotifications(habitId)
     await db.habits.delete(habitId)
     await db.habitHistory.where({ habitId }).delete()
     router.push('/habits')
@@ -52,14 +66,14 @@ const deleteHabit = async () => {
 <template>
   <div class="w-full max-w-md mx-auto h-screen shadow-2xl bg-white dark:bg-black overflow-hidden flex flex-col">
     <header class="flex items-center justify-between p-4 border-b border-slate-100 dark:border-slate-800">
-      <button @click="router.back()" class="text-slate-500 font-medium">Cancelar</button>
-      <h1 class="font-bold text-slate-800 dark:text-slate-100">Editar Hábito</h1>
-      <button @click="updateHabit" class="text-blue-600 font-bold">Guardar</button>
+      <button @click="router.back()" class="text-slate-500 font-medium">{{ t('editHabit.cancel') }}</button>
+      <h1 class="font-bold text-slate-800 dark:text-slate-100">{{ t('editHabit.title') }}</h1>
+      <button @click="updateHabit" class="text-blue-600 font-bold">{{ t('editHabit.save') }}</button>
     </header>
 
     <main class="p-6 space-y-8 flex-1 overflow-y-auto">
       <div>
-        <label class="block text-sm font-medium text-slate-500 mb-2">NOMBRE</label>
+        <label class="block text-sm font-medium text-slate-500 mb-2">{{ t('editHabit.name') }}</label>
         <input 
           v-model="name" 
           type="text" 
@@ -68,7 +82,7 @@ const deleteHabit = async () => {
       </div>
 
       <div>
-        <label class="block text-sm font-medium text-slate-500 mb-4">COLOR</label>
+        <label class="block text-sm font-medium text-slate-500 mb-4">{{ t('editHabit.color') }}</label>
         <div class="flex flex-wrap gap-4">
           <button 
             v-for="c in colorPalette" 
@@ -86,7 +100,7 @@ const deleteHabit = async () => {
 
       <div class="grid grid-cols-2 gap-4">
         <div>
-          <label class="block text-sm font-medium text-slate-500 mb-2">INICIO</label>
+          <label class="block text-sm font-medium text-slate-500 mb-2">{{ t('editHabit.start') }}</label>
           <input 
             v-model="startTime" 
             type="time" 
@@ -94,7 +108,7 @@ const deleteHabit = async () => {
           />
         </div>
         <div>
-          <label class="block text-sm font-medium text-slate-500 mb-2">FIN</label>
+          <label class="block text-sm font-medium text-slate-500 mb-2">{{ t('editHabit.end') }}</label>
           <input 
             v-model="endTime" 
             type="time" 
@@ -107,7 +121,7 @@ const deleteHabit = async () => {
         @click="deleteHabit" 
         class="w-full p-4 bg-rose-500/10 text-rose-500 rounded-2xl font-bold mt-4 active:scale-95 transition-transform"
       >
-        Eliminar Hábito
+        {{ t('editHabit.delete') }}
       </button>
     </main>
   </div>

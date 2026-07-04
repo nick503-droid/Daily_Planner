@@ -1,11 +1,14 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import dayjs from 'dayjs'
 import { db } from '../../shared/database/db'
+import { scheduleHabitNotifications } from '../../shared/notifications/habitNotifications'
 import { Activity, Book, Dumbbell, Heart, Coffee, Droplets } from 'lucide-vue-next'
 
 const router = useRouter()
+const { t } = useI18n()
 
 // Estado del Hábito
 const name = ref('')
@@ -29,7 +32,7 @@ const icons = [
 
 const saveHabit = async () => {
   if (!name.value) {
-    alert('Por favor, dale un nombre a tu hábito.')
+    alert(t('habitForm.nameRequired'))
     return
   }
 
@@ -67,6 +70,13 @@ const saveHabit = async () => {
 
       // Insertamos los 30 registros de golpe (bulkAdd es ultra rápido)
       await db.plannerItems.bulkAdd(futureTasks)
+
+      // Notificación local 10 min antes de cada ocurrencia (pide permiso si hace falta).
+      await scheduleHabitNotifications(
+        habitId,
+        t('notifications.habitSoon', { name: name.value }),
+        startTime.value
+      )
     }
 
     router.back()
@@ -80,20 +90,20 @@ const saveHabit = async () => {
   <div class="flex flex-col h-screen bg-slate-50 dark:bg-black z-50">
     
     <header class="flex items-center justify-between px-4 py-4 bg-white dark:bg-black border-b border-slate-200 dark:border-slate-800">
-      <button @click="router.back()" class="text-slate-500 font-medium active:opacity-70">Cancelar</button>
-      <h1 class="text-lg font-bold">Nuevo Hábito</h1>
-      <button @click="saveHabit" class="text-blue-600 dark:text-blue-400 font-bold active:opacity-70">Crear</button>
+      <button @click="router.back()" class="text-slate-500 font-medium active:opacity-70">{{ t('habitForm.cancel') }}</button>
+      <h1 class="text-lg font-bold">{{ t('habitForm.newTitle') }}</h1>
+      <button @click="saveHabit" class="text-blue-600 dark:text-blue-400 font-bold active:opacity-70">{{ t('habitForm.create') }}</button>
     </header>
 
     <main class="flex-1 p-4 overflow-y-auto space-y-6 pb-24">
       
       <!-- Entrada de Nombre -->
       <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 p-4">
-        <label class="block text-xs font-semibold text-slate-500 uppercase mb-2">Nombre del hábito</label>
+        <label class="block text-xs font-semibold text-slate-500 uppercase mb-2">{{ t('habitForm.nameLabel') }}</label>
         <input 
           v-model="name" 
           type="text" 
-          placeholder="Ej. Ir al gimnasio"
+          :placeholder="t('habitForm.namePlaceholder')"
           class="w-full text-lg border-b border-slate-200 dark:border-slate-700 bg-transparent py-2 focus:outline-none focus:border-blue-500"
         >
       </div>
@@ -102,8 +112,8 @@ const saveHabit = async () => {
       <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 p-4">
         <div class="flex items-center justify-between" @click="scheduleAutomatically = !scheduleAutomatically">
           <div>
-            <h3 class="font-semibold text-slate-800 dark:text-slate-100">Programar todos los días</h3>
-            <p class="text-xs text-slate-500">Añadir automáticamente al planificador</p>
+            <h3 class="font-semibold text-slate-800 dark:text-slate-100">{{ t('habitForm.scheduleTitle') }}</h3>
+            <p class="text-xs text-slate-500">{{ t('habitForm.scheduleSubtitle') }}</p>
           </div>
           
           <!-- Toggle Switch UI -->
@@ -121,7 +131,7 @@ const saveHabit = async () => {
         <!-- Aparece solo si el toggle está activo -->
         <div v-if="scheduleAutomatically" class="flex gap-4 mt-4 pt-4 border-t border-slate-100 dark:border-slate-700">
           <div class="flex-1">
-            <label class="block text-xs font-semibold text-slate-500 uppercase mb-1">Inicio</label>
+            <label class="block text-xs font-semibold text-slate-500 uppercase mb-1">{{ t('habitForm.start') }}</label>
             <input 
               v-model="startTime" 
               type="time" 
@@ -129,7 +139,7 @@ const saveHabit = async () => {
             >
           </div>
           <div class="flex-1">
-            <label class="block text-xs font-semibold text-slate-500 uppercase mb-1">Fin</label>
+            <label class="block text-xs font-semibold text-slate-500 uppercase mb-1">{{ t('habitForm.end') }}</label>
             <input 
               v-model="endTime" 
               type="time" 
@@ -141,7 +151,7 @@ const saveHabit = async () => {
 
       <!-- Selector de Color -->
       <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 p-4">
-        <label class="block text-xs font-semibold text-slate-500 uppercase mb-3">Color</label>
+        <label class="block text-xs font-semibold text-slate-500 uppercase mb-3">{{ t('habitForm.color') }}</label>
         <div class="flex justify-between">
           <button 
             v-for="color in palette" 
@@ -156,7 +166,7 @@ const saveHabit = async () => {
 
       <!-- Selector de Ícono -->
       <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 p-4">
-        <label class="block text-xs font-semibold text-slate-500 uppercase mb-3">Ícono</label>
+        <label class="block text-xs font-semibold text-slate-500 uppercase mb-3">{{ t('habitForm.icon') }}</label>
         <div class="grid grid-cols-6 gap-4">
           <button 
             v-for="icon in icons" 

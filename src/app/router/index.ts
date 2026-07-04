@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import type { RouteRecordRaw } from 'vue-router'
+import { hasStoredLocale } from '../../shared/i18n'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -7,16 +8,16 @@ const routes: Array<RouteRecordRaw> = [
     redirect: '/planner'
   },
   {
+    path: '/language',
+    name: 'language',
+    component: () => import('../../features/language/LanguageSelectView.vue'),
+    meta: { layout: 'blank' }
+  },
+  {
     path: '/planner',
     name: 'planner',
     component: () => import('../../features/planner/PlannerView.vue'),
     meta: { layout: 'default' }
-  },
-  {
-    path: '/planner/new',
-    name: 'new-task',
-    component: () => import('../../features/planner/TaskFormView.vue'),
-    meta: { layout: 'blank' }
   },
   {
     path: '/habits',
@@ -53,4 +54,9 @@ const routes: Array<RouteRecordRaw> = [
 export const router = createRouter({
   history: createWebHistory(),
   routes
+})
+
+// Primer arranque: si el usuario nunca eligió idioma, lo mandamos a elegirlo antes que nada.
+router.beforeEach((to) => {
+  if (!hasStoredLocale() && to.name !== 'language') return { name: 'language' }
 })

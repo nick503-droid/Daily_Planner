@@ -62,6 +62,8 @@ export const usePlannerStore = defineStore('planner', () => {
 
   const toggleItemCompletion = async (item: PlannerItem) => {
     if (!item.id) return
+    // Regla de negocio: días pasados y futuros son de solo lectura, solo "hoy" es editable.
+    if (item.date !== dayjs().format('YYYY-MM-DD')) return
     const newState = !item.isCompleted
     
     try {

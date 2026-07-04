@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { db } from '../../shared/database/db'
 import type { Habit } from '../../shared/types/database'
+
+const { t } = useI18n()
 
 // Importamos los iconos
 import { Activity, Book, Dumbbell, Heart, Coffee, Droplets } from 'lucide-vue-next'
@@ -32,7 +35,7 @@ onMounted(() => {
 <template>
   <div class="flex flex-col h-full bg-slate-50 dark:bg-black relative">
     <header class="px-4 py-6 bg-white dark:bg-black border-b border-slate-200 dark:border-slate-800">
-      <h1 class="text-2xl font-bold text-slate-800 dark:text-slate-100">Mis Hábitos</h1>
+      <h1 class="text-2xl font-bold text-slate-800 dark:text-slate-100">{{ t('habits.title') }}</h1>
     </header>
 
     <div class="flex-1 overflow-y-auto p-4 pb-24 space-y-4">
@@ -40,8 +43,8 @@ onMounted(() => {
       <!-- Estado vacío -->
       <div v-if="habits.length === 0" class="flex flex-col items-center justify-center h-40 text-slate-400">
         <component :is="Activity" :size="48" class="mb-4 opacity-50" />
-        <p>Aún no tienes hábitos.</p>
-        <p class="text-sm">Presiona el botón + para empezar.</p>
+        <p>{{ t('habits.empty1') }}</p>
+        <p class="text-sm">{{ t('habits.empty2') }}</p>
       </div>
 
       <!-- Lista de Hábitos -->
@@ -66,10 +69,10 @@ onMounted(() => {
           </h2>
           <div class="flex gap-4 mt-1 text-xs font-medium text-slate-500 dark:text-slate-400">
             <span class="flex items-center gap-1">
-              🔥 Racha: <span :style="{ color: habit.color }">{{ habit.currentStreak }}</span>
+              🔥 {{ t('habits.streak') }}: <span :style="{ color: habit.color }">{{ habit.currentStreak }}</span>
             </span>
             <span>
-              🏆 Récord: {{ habit.bestStreak }}
+              🏆 {{ t('habits.record') }}: {{ habit.bestStreak }}
             </span>
           </div>
         </div>

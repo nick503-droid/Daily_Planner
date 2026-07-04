@@ -2,6 +2,9 @@
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import DefaultLayout from './app/layouts/DefaultLayout.vue'
+import { useExitGuard } from './app/composables/useExitGuard'
+
+useExitGuard()
 
 const route = useRoute()
 const layout = computed(() => {

@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import dayjs from 'dayjs'
 import isBetween from 'dayjs/plugin/isBetween'
 import { db } from '../../shared/database/db'
 
 dayjs.extend(isBetween)
+const { t } = useI18n()
 
 const habitsData = ref<any[]>([])
 const totalCompletions = computed(() => habitsData.value.reduce((acc, h) => acc + h.count, 0))
@@ -50,7 +52,7 @@ onMounted(loadData)
 <template>
   <div class="w-full max-w-md mx-auto h-screen shadow-2xl bg-white dark:bg-[#050505] overflow-hidden flex flex-col">
     <header class="px-6 py-6 border-b border-slate-100 dark:border-slate-800/50">
-      <h1 class="text-xl font-bold text-slate-800 dark:text-slate-100">Analítica de Vida</h1>
+      <h1 class="text-xl font-bold text-slate-800 dark:text-slate-100">{{ t('stats.title') }}</h1>
     </header>
 
     <main class="flex-1 p-6 flex flex-col items-center justify-center">
@@ -77,7 +79,7 @@ onMounted(loadData)
         
         <!-- Texto central -->
         <div class="absolute text-center">
-          <p class="text-xs text-slate-400 uppercase tracking-widest font-semibold">Total</p>
+          <p class="text-xs text-slate-400 uppercase tracking-widest font-semibold">{{ t('stats.total') }}</p>
           <p class="text-4xl font-bold text-slate-800 dark:text-white">{{ totalCompletions }}</p>
         </div>
       </div>

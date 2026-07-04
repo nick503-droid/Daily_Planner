@@ -1,6 +1,7 @@
 import { onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { App } from '@capacitor/app'
+import { i18n } from '../../shared/i18n'
 
 export function useExitGuard() {
   const router = useRouter()
@@ -14,7 +15,7 @@ export function useExitGuard() {
       lastClick = now
       // Si estamos en la raíz (ej: /planner), damos el aviso. Si no, volvemos atrás.
       if (router.currentRoute.value.path === '/planner') {
-        alert('Presiona de nuevo para salir')
+        alert(i18n.global.t('exit.pressAgain'))
       } else {
         router.push('/planner')
       }
