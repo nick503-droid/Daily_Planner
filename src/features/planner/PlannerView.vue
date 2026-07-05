@@ -3,6 +3,7 @@ import { computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import dayjs from 'dayjs'
 import { usePlannerStore } from '../../app/stores/planner'
+import { computeTimelineLayout } from '../../shared/utils/timelineLayout'
 import TimelineItem from './components/TimelineItem.vue'
 
 const store = usePlannerStore()
@@ -17,6 +18,11 @@ const formatHour = (h: number) => {
   if (h === 12) return '12 PM'
   return `${h - 12} PM`
 }
+
+// Si dos o más hábitos caen a la misma hora, este mapa dice en qué columna
+// (y de cuántas) debe dibujarse cada uno, para que no queden uno encima del
+// otro en la línea de tiempo.
+const timelineLayout = computed(() => computeTimelineLayout(dailyItems.value))
 </script>
 
 <template>
@@ -53,7 +59,12 @@ const formatHour = (h: number) => {
           <div class="flex-1 relative"></div>
         </div>
 
-        <TimelineItem v-for="item in dailyItems" :key="item.id" :item="item" />
+        <TimelineItem
+          v-for="item in dailyItems"
+          :key="item.id"
+          :item="item"
+          :layout="timelineLayout.get(item.id)"
+        />
       </div>
     </div>
 

@@ -55,7 +55,12 @@ const messages = {
       exportBackup: 'Exportar Backup Manual'
     },
     stats: { title: 'Analítica de Vida', total: 'Total' },
-    exit: { pressAgain: 'Presiona de nuevo para salir' },
+    exit: {
+      title: '¿Salir de la app?',
+      subtitle: 'Se cerrará Daily Planner.',
+      yes: 'Sí, salir',
+      no: 'No'
+    },
     notifications: { habitSoon: 'Pronto empezará "{name}"' }
   },
   en: {
@@ -106,7 +111,12 @@ const messages = {
       exportBackup: 'Export Manual Backup'
     },
     stats: { title: 'Life Analytics', total: 'Total' },
-    exit: { pressAgain: 'Press again to exit' },
+    exit: {
+      title: 'Exit the app?',
+      subtitle: 'Daily Planner will close.',
+      yes: 'Yes, exit',
+      no: 'No'
+    },
     notifications: { habitSoon: '"{name}" is starting soon' }
   }
 }

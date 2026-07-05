@@ -4,10 +4,12 @@ import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { db } from '../../shared/database/db'
 import { scheduleHabitNotifications, cancelHabitNotifications } from '../../shared/notifications/habitNotifications'
+import { usePlannerStore } from '../../app/stores/planner'
 
 const route = useRoute()
 const router = useRouter()
 const { t } = useI18n()
+const plannerStore = usePlannerStore()
 const habitId = Number(route.params.id)
 
 // Estado del formulario
@@ -50,6 +52,10 @@ const updateHabit = async () => {
     await scheduleHabitNotifications(habitId, t('notifications.habitSoon', { name: name.value }), startTime.value)
   }
 
+  // Refrescamos el planner para que el cambio de nombre/color/hora se vea
+  // de inmediato en la línea de tiempo, sin tener que cambiar de día.
+  await plannerStore.loadItemsForSelectedDate()
+
   router.push('/habits')
 }
 
@@ -58,6 +64,9 @@ const deleteHabit = async () => {
     await cancelHabitNotifications(habitId)
     await db.habits.delete(habitId)
     await db.habitHistory.where({ habitId }).delete()
+    // La limpieza de los plannerItems huérfanos ya la hace loadItemsForSelectedDate
+    // (borra cualquier item cuyo habitId ya no exista en la tabla maestra).
+    await plannerStore.loadItemsForSelectedDate()
     router.push('/habits')
   }
 }

@@ -5,10 +5,12 @@ import { useI18n } from 'vue-i18n'
 import dayjs from 'dayjs'
 import { db } from '../../shared/database/db'
 import { scheduleHabitNotifications } from '../../shared/notifications/habitNotifications'
+import { usePlannerStore } from '../../app/stores/planner'
 import { Activity, Book, Dumbbell, Heart, Coffee, Droplets } from 'lucide-vue-next'
 
 const router = useRouter()
 const { t } = useI18n()
+const plannerStore = usePlannerStore()
 
 // Estado del Hábito
 const name = ref('')
@@ -38,11 +40,17 @@ const saveHabit = async () => {
 
   try {
     // 1. Guardamos el hábito principal
+    // IMPORTANTE: guardamos también startTime/endTime en el hábito maestro
+    // (aunque no se programe automáticamente) para que la pantalla de edición
+    // siempre pueda precargar la hora real elegida, en vez de caer al
+    // fallback de las 08:00 y "cambiar" la hora sin que el usuario lo pidiera.
     const habitId = await db.habits.add({
       name: name.value,
       color: selectedColor.value,
       icon: selectedIcon.value,
       createdAt: dayjs().format('YYYY-MM-DD'),
+      startTime: scheduleAutomatically.value ? startTime.value : undefined,
+      endTime: scheduleAutomatically.value ? endTime.value : undefined,
       currentStreak: 0,
       bestStreak: 0,
       totalCompletedDays: 0,
@@ -78,6 +86,11 @@ const saveHabit = async () => {
         startTime.value
       )
     }
+
+    // Refrescamos el planner AHORA, en memoria, para que si el usuario
+    // vuelve a la vista de las 24 horas los nuevos bloques ya estén ahí sin
+    // tener que cambiar de día para "forzar" la recarga.
+    await plannerStore.loadItemsForSelectedDate()
 
     router.back()
   } catch (error) {

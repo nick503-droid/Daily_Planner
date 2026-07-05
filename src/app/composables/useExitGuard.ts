@@ -1,25 +1,37 @@
-import { onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { App } from '@capacitor/app'
-import { i18n } from '../../shared/i18n'
 
+/**
+ * Maneja el botón "Atrás" físico de Android.
+ * - Si no estamos en la raíz (/planner), simplemente navega ahí.
+ * - Si ya estamos en la raíz, en vez del viejo esquema de "doble tap para
+ *   salir" (poco intuitivo y con un alert() feo), mostramos un modal de
+ *   confirmación. Si el usuario confirma, ahí sí cerramos la app.
+ */
 export function useExitGuard() {
   const router = useRouter()
-  let lastClick = 0
+  const showExitConfirm = ref(false)
 
   const handleBack = () => {
-    const now = Date.now()
-    if (now - lastClick < 500) { // Doble clic rápido
-      App.exitApp()
+    // Si el modal ya está abierto, un segundo toque del botón atrás no debe
+    // hacer nada raro (ni abrir otro modal encima).
+    if (showExitConfirm.value) return
+
+    if (router.currentRoute.value.path === '/planner') {
+      showExitConfirm.value = true
     } else {
-      lastClick = now
-      // Si estamos en la raíz (ej: /planner), damos el aviso. Si no, volvemos atrás.
-      if (router.currentRoute.value.path === '/planner') {
-        alert(i18n.global.t('exit.pressAgain'))
-      } else {
-        router.push('/planner')
-      }
+      router.push('/planner')
     }
+  }
+
+  const confirmExit = () => {
+    showExitConfirm.value = false
+    App.exitApp()
+  }
+
+  const cancelExit = () => {
+    showExitConfirm.value = false
   }
 
   onMounted(() => {
@@ -29,4 +41,6 @@ export function useExitGuard() {
   onUnmounted(() => {
     App.removeAllListeners()
   })
+
+  return { showExitConfirm, confirmExit, cancelExit }
 }
