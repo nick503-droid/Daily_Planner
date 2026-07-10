@@ -12,7 +12,7 @@ const choose = (locale: Locale) => {
 </script>
 
 <template>
-  <div class="w-full max-w-md mx-auto h-screen flex flex-col items-center justify-center gap-8 p-6 bg-white dark:bg-black text-center">
+  <div class="w-full max-w-md mx-auto h-screen flex flex-col items-center justify-center gap-8 p-6 bg-white dark:bg-[#1a1a2e] text-center">
     <div>
       <h1 class="text-xl font-bold text-slate-800 dark:text-slate-100">Choose your language</h1>
       <h1 class="text-xl font-bold text-slate-800 dark:text-slate-100">Elige tu idioma</h1>
@@ -27,7 +27,7 @@ const choose = (locale: Locale) => {
       </button>
       <button
         @click="choose('en')"
-        class="w-full p-4 bg-slate-100 dark:bg-slate-800 active:scale-95 text-slate-800 dark:text-white rounded-2xl font-bold transition-all"
+        class="w-full p-4 bg-slate-100 dark:bg-[#16213e] active:scale-95 text-slate-800 dark:text-white rounded-2xl font-bold transition-all"
       >
         English
       </button>

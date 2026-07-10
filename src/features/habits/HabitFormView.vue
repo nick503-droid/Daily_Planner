@@ -100,9 +100,9 @@ const saveHabit = async () => {
 </script>
 
 <template>
-  <div class="flex flex-col h-screen bg-slate-50 dark:bg-black z-50">
+  <div class="flex flex-col h-screen bg-slate-50 dark:bg-[#1a1a2e] z-50">
     
-    <header class="flex items-center justify-between px-4 py-4 bg-white dark:bg-black border-b border-slate-200 dark:border-slate-800">
+    <header class="flex items-center justify-between px-4 py-4 bg-white dark:bg-[#16213e] border-b border-slate-200 dark:border-slate-700/30">
       <button @click="router.back()" class="text-slate-500 font-medium active:opacity-70">{{ t('habitForm.cancel') }}</button>
       <h1 class="text-lg font-bold">{{ t('habitForm.newTitle') }}</h1>
       <button @click="saveHabit" class="text-blue-600 dark:text-blue-400 font-bold active:opacity-70">{{ t('habitForm.create') }}</button>
@@ -111,18 +111,18 @@ const saveHabit = async () => {
     <main class="flex-1 p-4 overflow-y-auto space-y-6 pb-24">
       
       <!-- Entrada de Nombre -->
-      <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 p-4">
+      <div class="bg-white dark:bg-[#16213e] rounded-xl shadow-sm border border-slate-100 dark:border-slate-700/40 p-4">
         <label class="block text-xs font-semibold text-slate-500 uppercase mb-2">{{ t('habitForm.nameLabel') }}</label>
         <input 
           v-model="name" 
           type="text" 
           :placeholder="t('habitForm.namePlaceholder')"
-          class="w-full text-lg border-b border-slate-200 dark:border-slate-700 bg-transparent py-2 focus:outline-none focus:border-blue-500"
+          class="w-full text-lg border-b border-slate-200 dark:border-slate-600 bg-transparent py-2 focus:outline-none focus:border-blue-500"
         >
       </div>
 
       <!-- UX: Toggle para programar en el Planner -->
-      <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 p-4">
+      <div class="bg-white dark:bg-[#16213e] rounded-xl shadow-sm border border-slate-100 dark:border-slate-700/40 p-4">
         <div class="flex items-center justify-between" @click="scheduleAutomatically = !scheduleAutomatically">
           <div>
             <h3 class="font-semibold text-slate-800 dark:text-slate-100">{{ t('habitForm.scheduleTitle') }}</h3>
@@ -132,7 +132,7 @@ const saveHabit = async () => {
           <!-- Toggle Switch UI -->
           <div 
             class="w-12 h-6 rounded-full p-1 transition-colors duration-300 ease-in-out cursor-pointer"
-            :class="scheduleAutomatically ? 'bg-blue-600' : 'bg-slate-300 dark:bg-slate-600'"
+            :class="scheduleAutomatically ? 'bg-blue-600' : 'bg-slate-300 dark:bg-slate-500'"
           >
             <div 
               class="w-4 h-4 bg-white rounded-full shadow-md transform transition-transform duration-300"
@@ -142,13 +142,13 @@ const saveHabit = async () => {
         </div>
 
         <!-- Aparece solo si el toggle está activo -->
-        <div v-if="scheduleAutomatically" class="flex gap-4 mt-4 pt-4 border-t border-slate-100 dark:border-slate-700">
+        <div v-if="scheduleAutomatically" class="flex gap-4 mt-4 pt-4 border-t border-slate-100 dark:border-slate-700/40">
           <div class="flex-1">
             <label class="block text-xs font-semibold text-slate-500 uppercase mb-1">{{ t('habitForm.start') }}</label>
             <input 
               v-model="startTime" 
               type="time" 
-              class="w-full bg-slate-100 dark:bg-black rounded-lg p-3 text-center font-medium focus:outline-none"
+              class="w-full bg-slate-100 dark:bg-[#1a1a2e] rounded-lg p-3 text-center font-medium focus:outline-none"
             >
           </div>
           <div class="flex-1">
@@ -156,14 +156,14 @@ const saveHabit = async () => {
             <input 
               v-model="endTime" 
               type="time" 
-              class="w-full bg-slate-100 dark:bg-black rounded-lg p-3 text-center font-medium focus:outline-none"
+              class="w-full bg-slate-100 dark:bg-[#1a1a2e] rounded-lg p-3 text-center font-medium focus:outline-none"
             >
           </div>
         </div>
       </div>
 
       <!-- Selector de Color -->
-      <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 p-4">
+      <div class="bg-white dark:bg-[#16213e] rounded-xl shadow-sm border border-slate-100 dark:border-slate-700/40 p-4">
         <label class="block text-xs font-semibold text-slate-500 uppercase mb-3">{{ t('habitForm.color') }}</label>
         <div class="flex justify-between">
           <button 
@@ -171,14 +171,14 @@ const saveHabit = async () => {
             :key="color"
             @click="selectedColor = color"
             class="w-10 h-10 rounded-full transition-transform"
-            :class="selectedColor === color ? 'scale-110 ring-4 ring-slate-200 dark:ring-slate-700' : 'scale-100'"
+            :class="selectedColor === color ? 'scale-110 ring-4 ring-slate-200 dark:ring-slate-600' : 'scale-100'"
             :style="{ backgroundColor: color }"
           ></button>
         </div>
       </div>
 
       <!-- Selector de Ícono -->
-      <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 p-4">
+      <div class="bg-white dark:bg-[#16213e] rounded-xl shadow-sm border border-slate-100 dark:border-slate-700/40 p-4">
         <label class="block text-xs font-semibold text-slate-500 uppercase mb-3">{{ t('habitForm.icon') }}</label>
         <div class="grid grid-cols-6 gap-4">
           <button 
@@ -186,7 +186,7 @@ const saveHabit = async () => {
             :key="icon.id"
             @click="selectedIcon = icon.id"
             class="flex items-center justify-center p-3 rounded-xl transition-all"
-            :class="selectedIcon === icon.id ? 'bg-slate-100 dark:bg-slate-700 text-blue-600 dark:text-blue-400' : 'text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800'"
+            :class="selectedIcon === icon.id ? 'bg-slate-100 dark:bg-slate-700/50 text-blue-600 dark:text-blue-400' : 'text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-700/30'"
           >
             <component :is="icon.component" :size="28" :stroke-width="selectedIcon === icon.id ? 2.5 : 2" />
           </button>

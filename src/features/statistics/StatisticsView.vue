@@ -50,8 +50,8 @@ onMounted(loadData)
 </script>
 
 <template>
-  <div class="w-full max-w-md mx-auto h-screen shadow-2xl bg-white dark:bg-[#050505] overflow-hidden flex flex-col">
-    <header class="px-6 py-6 border-b border-slate-100 dark:border-slate-800/50">
+  <div class="w-full max-w-md mx-auto h-screen shadow-2xl bg-white dark:bg-[#1a1a2e] overflow-hidden flex flex-col">
+    <header class="px-6 py-6 border-b border-slate-100 dark:border-slate-700/30">
       <h1 class="text-xl font-bold text-slate-800 dark:text-slate-100">{{ t('stats.title') }}</h1>
     </header>
 
@@ -61,7 +61,7 @@ onMounted(loadData)
       <div class="relative flex justify-center items-center mb-10">
         <svg viewBox="0 0 36 36" class="w-64 h-64 rotate-[-90deg]">
           <!-- Círculo de fondo (Gris) -->
-          <circle cx="18" cy="18" r="15.9" fill="none" class="stroke-slate-100 dark:stroke-slate-900" stroke-width="3"></circle>
+          <circle cx="18" cy="18" r="15.9" fill="none" class="stroke-slate-100 dark:stroke-slate-700/50" stroke-width="3"></circle>
           
           <!-- Segmentos de datos -->
           <circle 
@@ -86,7 +86,7 @@ onMounted(loadData)
 
       <!-- Leyenda Simple -->
       <div class="w-full space-y-3">
-        <div v-for="h in habitsData" :key="h.name" class="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-900/50 rounded-xl">
+        <div v-for="h in habitsData" :key="h.name" class="flex items-center justify-between p-3 bg-slate-50 dark:bg-[#16213e] rounded-xl">
           <div class="flex items-center gap-3">
             <div class="w-3 h-3 rounded-full" :style="{ backgroundColor: h.color }"></div>
             <span class="font-medium text-slate-700 dark:text-slate-200">{{ h.name }}</span>

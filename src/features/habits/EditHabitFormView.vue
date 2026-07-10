@@ -73,8 +73,8 @@ const deleteHabit = async () => {
 </script>
 
 <template>
-  <div class="w-full max-w-md mx-auto h-screen shadow-2xl bg-white dark:bg-black overflow-hidden flex flex-col">
-    <header class="flex items-center justify-between p-4 border-b border-slate-100 dark:border-slate-800">
+  <div class="w-full max-w-md mx-auto h-screen shadow-2xl bg-white dark:bg-[#1a1a2e] overflow-hidden flex flex-col">
+    <header class="flex items-center justify-between p-4 border-b border-slate-100 dark:border-slate-700/30">
       <button @click="router.back()" class="text-slate-500 font-medium">{{ t('editHabit.cancel') }}</button>
       <h1 class="font-bold text-slate-800 dark:text-slate-100">{{ t('editHabit.title') }}</h1>
       <button @click="updateHabit" class="text-blue-600 font-bold">{{ t('editHabit.save') }}</button>
@@ -86,7 +86,7 @@ const deleteHabit = async () => {
         <input 
           v-model="name" 
           type="text" 
-          class="w-full p-4 bg-slate-100 dark:bg-slate-900 rounded-2xl border border-transparent focus:border-blue-500 outline-none text-slate-800 dark:text-white"
+          class="w-full p-4 bg-slate-100 dark:bg-[#16213e] rounded-2xl border border-transparent focus:border-blue-500 outline-none text-slate-800 dark:text-white"
         />
       </div>
 
@@ -102,7 +102,7 @@ const deleteHabit = async () => {
             :class="color === c ? 'ring-4 ring-blue-500/30 scale-110' : 'hover:scale-105'"
             :style="{ backgroundColor: c }"
           >
-            <div v-if="color === c" class="w-full h-full rounded-full border-4 border-white dark:border-black"></div>
+            <div v-if="color === c" class="w-full h-full rounded-full border-4 border-white dark:border-[#1a1a2e]"></div>
           </button>
         </div>
       </div>
@@ -113,7 +113,7 @@ const deleteHabit = async () => {
           <input 
             v-model="startTime" 
             type="time" 
-            class="w-full h-14 px-4 bg-slate-100 dark:bg-slate-900 rounded-2xl border border-transparent text-slate-800 dark:text-white outline-none"
+            class="w-full h-14 px-4 bg-slate-100 dark:bg-[#16213e] rounded-2xl border border-transparent text-slate-800 dark:text-white outline-none"
           />
         </div>
         <div>
@@ -121,7 +121,7 @@ const deleteHabit = async () => {
           <input 
             v-model="endTime" 
             type="time" 
-            class="w-full h-14 px-4 bg-slate-100 dark:bg-slate-900 rounded-2xl border border-transparent text-slate-800 dark:text-white outline-none"
+            class="w-full h-14 px-4 bg-slate-100 dark:bg-[#16213e] rounded-2xl border border-transparent text-slate-800 dark:text-white outline-none"
           />
         </div>
       </div>

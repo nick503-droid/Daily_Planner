@@ -55,16 +55,16 @@ const selectDateAndGoToPlanner = (dateStr: string) => {
 </script>
 
 <template>
-  <div class="flex flex-col h-full bg-slate-50 dark:bg-black relative">
-    <header class="px-4 py-6 bg-white dark:bg-black border-b border-slate-200 dark:border-slate-800">
+  <div class="flex flex-col h-full bg-slate-50 dark:bg-[#1a1a2e] relative">
+    <header class="px-4 py-6 bg-white dark:bg-[#16213e] border-b border-slate-200 dark:border-slate-700/30">
       <h1 class="text-2xl font-bold text-slate-800 dark:text-slate-100">Calendario</h1>
     </header>
 
     <div class="flex-1 p-4 overflow-y-auto pb-24">
-      <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 p-4">
+      <div class="bg-white dark:bg-[#16213e] rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700/40 p-4">
         
         <div class="flex items-center justify-between mb-6">
-          <button @click="prevMonth" class="p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-full transition-colors">
+          <button @click="prevMonth" class="p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-700/50 rounded-full transition-colors">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
           </button>
           
@@ -94,7 +94,7 @@ const selectDateAndGoToPlanner = (dateStr: string) => {
                   ? 'bg-blue-600 text-white shadow-md' 
                   : day.isToday 
                     ? 'bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 font-bold' 
-                    : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 active:scale-95'
+                    : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700/50 active:scale-95'
               ]"
             >
               {{ day.dayNumber }}

@@ -2,8 +2,14 @@
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
+import { useDark } from '@vueuse/core'
 import DefaultLayout from './app/layouts/DefaultLayout.vue'
 import { useExitGuard } from './app/composables/useExitGuard'
+
+// Inicializa el modo dark/light desde el arranque de la app.
+// initialValue: 'light' => primera visita = modo claro.
+// Si el usuario ya lo cambió antes, se lee de localStorage.
+useDark({ initialValue: 'light' })
 
 const { showExitConfirm, confirmExit, cancelExit } = useExitGuard()
 const { t } = useI18n()
@@ -27,7 +33,7 @@ const layout = computed(() => {
       class="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 px-6"
       @click.self="cancelExit"
     >
-      <div class="w-full max-w-xs bg-white dark:bg-slate-900 rounded-2xl shadow-2xl p-6 text-center">
+      <div class="w-full max-w-xs bg-white dark:bg-[#16213e] rounded-2xl shadow-2xl p-6 text-center">
         <h2 class="text-base font-bold text-slate-800 dark:text-slate-100 mb-1">
           {{ t('exit.title') }}
         </h2>
@@ -37,7 +43,7 @@ const layout = computed(() => {
         <div class="flex gap-3">
           <button
             @click="cancelExit"
-            class="flex-1 py-3 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-semibold active:scale-95 transition-transform"
+            class="flex-1 py-3 rounded-xl bg-slate-100 dark:bg-slate-700/50 text-slate-700 dark:text-slate-200 font-semibold active:scale-95 transition-transform"
           >
             {{ t('exit.no') }}
           </button>

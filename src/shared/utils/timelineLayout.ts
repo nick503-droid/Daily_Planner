@@ -1,6 +1,7 @@
 export interface LayoutInfo {
   col: number
   cols: number
+  span: number
 }
 
 interface TimelineLike {
@@ -15,16 +16,10 @@ function toMinutes(time: string): number {
 }
 
 /**
- * Calcula, para cada ítem, en qué "columna" debe ir y cuántas columnas totales
- * tiene su grupo de solapamiento. Así, si hay 2+ hábitos a la misma hora,
- * la línea de tiempo los reparte en paralelo en vez de dibujarlos uno encima
- * del otro.
- *
- * Algoritmo (similar al usado por Google Calendar / apps de agenda):
- * 1. Se ordenan los ítems por hora de inicio.
- * 2. Se agrupan en "clusters" de ítems que se solapan entre sí en cadena.
- * 3. Dentro de cada cluster, se asigna cada ítem a la primera columna libre
- *    (greedy), y el cluster completo usa el máximo de columnas necesitadas.
+ * Agrupa los ítems que coinciden en horario y les asigna un índice de columna (col)
+ * y el total de coincidencias en ese grupo (cols).
+ * De esta manera el componente visual puede presentarlos en cascada respetando 
+ * exactamente su hora de inicio (top = startTime).
  */
 export function computeTimelineLayout(items: TimelineLike[]): Map<string, LayoutInfo> {
   const result = new Map<string, LayoutInfo>()
@@ -35,9 +30,9 @@ export function computeTimelineLayout(items: TimelineLike[]): Map<string, Layout
     .map(item => {
       const start = toMinutes(item.startTime || '00:00')
       let end = toMinutes(item.endTime || item.startTime || '00:00')
-      // Si no hay duración real (endTime <= startTime), le damos 30min mínimos
-      // para que el cálculo de solapamiento tenga sentido.
-      if (end <= start) end = start + 30
+      if (end < start + 65) {
+        end = start + 65
+      }
       return { id: item.id, start, end }
     })
     .sort((a, b) => a.start - b.start)
@@ -48,9 +43,8 @@ export function computeTimelineLayout(items: TimelineLike[]): Map<string, Layout
   const flushCluster = () => {
     if (cluster.length === 0) return
 
-    // colEndTimes[c] = hora (en minutos) en la que queda libre la columna c
     const colEndTimes: number[] = []
-    const assigned: { id: string; col: number }[] = []
+    const assigned: { id: string; col: number; start: number; end: number }[] = []
 
     for (const item of cluster) {
       let placedCol = -1
@@ -65,11 +59,13 @@ export function computeTimelineLayout(items: TimelineLike[]): Map<string, Layout
         colEndTimes.push(item.end)
         placedCol = colEndTimes.length - 1
       }
-      assigned.push({ id: item.id, col: placedCol })
+      assigned.push({ id: item.id, col: placedCol, start: item.start, end: item.end })
     }
 
     const cols = colEndTimes.length
-    for (const a of assigned) result.set(a.id, { col: a.col, cols })
+    for (const a of assigned) {
+      result.set(a.id, { col: a.col, cols, span: 1 })
+    }
     cluster = []
   }
 
@@ -87,3 +83,4 @@ export function computeTimelineLayout(items: TimelineLike[]): Map<string, Layout
 
   return result
 }
+

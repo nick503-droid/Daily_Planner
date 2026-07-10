@@ -33,8 +33,8 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="flex flex-col h-full bg-slate-50 dark:bg-black relative">
-    <header class="px-4 py-6 bg-white dark:bg-black border-b border-slate-200 dark:border-slate-800">
+  <div class="flex flex-col h-full bg-slate-50 dark:bg-[#1a1a2e] relative">
+    <header class="px-4 py-6 bg-white dark:bg-[#16213e] border-b border-slate-200 dark:border-slate-700/30">
       <h1 class="text-2xl font-bold text-slate-800 dark:text-slate-100">{{ t('habits.title') }}</h1>
     </header>
 
@@ -52,7 +52,7 @@ onMounted(() => {
         v-for="habit in habits" 
         :key="habit.id"
         :to="`/habits/${habit.id}/edit`"
-        class="block bg-white dark:bg-slate-800 rounded-2xl p-4 shadow-sm border border-slate-100 dark:border-slate-700 flex items-center gap-4 transition-transform active:scale-95 cursor-pointer"
+        class="block bg-white dark:bg-[#16213e] rounded-2xl p-4 shadow-sm border border-slate-100 dark:border-slate-700/40 flex items-center gap-4 transition-transform active:scale-95 cursor-pointer"
       >
         <!-- Icono / Color -->
         <div 
@@ -78,7 +78,7 @@ onMounted(() => {
         </div>
         
         <!-- Flecha -->
-        <div class="text-slate-300 dark:text-slate-600">
+        <div class="text-slate-300 dark:text-slate-500">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
         </div>
       </router-link>
